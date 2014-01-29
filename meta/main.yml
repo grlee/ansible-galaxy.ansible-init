@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  author: George Lee
+  description: Installs ansible on Cygwin, Ubuntu, and Mac OS X (Darwin) using package managers.
+  company:
+  license: BSD
+  min_ansible_version: 1.4
+  platforms:
+  - name: Cygwin
+    versions:
+    - all
+  - name: Ubuntu
+    versions:
+    - all
+  categories:
+  - system
+dependencies: []
