@@ -11,7 +11,11 @@ galaxy_info:
     - all
   - name: Ubuntu
     versions:
-    - all
+    - saucy
+    - trusty
+  - name: Darwin
+    versions:
+    - 10.9.1
   categories:
   - system
 dependencies: []
