@@ -11,6 +11,7 @@ galaxy_info:
     - all
   - name: Ubuntu
     versions:
+    - saucy
     - trusty
   - name: Darwin
     versions:
