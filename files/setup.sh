@@ -12,7 +12,10 @@ fi
 os_type="$(uname -o)"
 echo "Found os type $os_type"
 if [ "$os_type" == "Cygwin" ]; then
-	test -f /bin/svn || {echo "Please install subversion from cygwin" && exit 1 }
+	test -f /bin/svn
+        if [ "$?" == "1" ]; then
+        	echo "Please install subversion from cygwin" && exit 1
+	fi
 
 	echo "Installing apt-cyg"
 	svn --force export http://apt-cyg.googlecode.com/svn/trunk/ /bin/
@@ -22,7 +25,11 @@ if [ "$os_type" == "Cygwin" ]; then
 	apt-cyg install python gcc-core wget openssh
 
 	echo "Test paramiko"
-	python -c "import paramiko" || {echo "Look at this page for help to set up python-paramiko http://atbrox.com/2009/09/21/how-to-get-pipvirtualenvfabric-working-on-cygwin/" && exit 1 }
+	python -c "import paramiko"
+	if [ "$?" == "1" ]; then
+		echo "Look at this page for help to set up 
+python-paramiko http://atbrox.com/2009/09/21/how-to-get-pipvirtualenvfabric-working-on-cygwin/"
+	fi
 
 	echo "Installing setuptools"
 	wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -O - | python
@@ -44,7 +51,10 @@ elif [ "$(uname)" == "Darwin" ]; then
 	ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)" &> /dev/null && echo "OK" || {echo "FAILED"; exit 1 }
 
 	echo -n "Test if home brew is installed... "
-	brew --version &> /dev/null && echo "OK" || {echo "FAILED"; exit 1 }
+	brew --version &> /dev/null && echo "OK"
+        if [ "$?" == "1"]; then
+		echo "FAILED" && exit 1
+	fi
 
 	echo "Installing pip"
 	sudo easy_install pip || exit 1
@@ -53,12 +63,21 @@ else
 fi
 
 echo -n "Test if pip is installed..."
-pip --version &> /dev/null && echo "OK" || {echo "FAILED"; exit 1 }
+pip --version &> /dev/null && echo "OK" 
+if [ "$?" == "1" ]; then 
+	echo "FAILED"; exit 1
+fi
 
 echo -n "Installing ansible..."
-pip install ansible --upgrade && echo "OK" || {echo "FAILED"; exit 1 }
+pip install ansible --upgrade && echo "OK"
+if [ "$?" == "1" ]; then
+        echo "FAILED"; exit 1
+fi
 
 echo -n "Test ansible is installed... "
-ansible --version &> /dev/null && echo "OK" || {echo "FAILED"; exit 1 }
+ansible --version &> /dev/null && echo "OK"
+if [ "$?" == "1" ]; then
+        echo "FAILED"; exit 1
+fi
 
 exit 0
