@@ -11,7 +11,7 @@ fi
 
 os_type="$(uname -o)"
 echo "Found os type $os_type"
-if [ "os_type" == "Cygwin" ]; then
+if [ "$os_type" == "Cygwin" ]; then
 	test -f /bin/svn || {echo "Please install subversion from cygwin" && exit 1 }
 
 	echo "Installing apt-cyg"
