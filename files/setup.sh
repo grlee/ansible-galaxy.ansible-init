@@ -12,24 +12,20 @@ fi
 os_type="$(uname -o)"
 echo "Found os type $os_type"
 if [ "$os_type" == "Cygwin" ]; then
-	test -f /bin/svn
+	test -f /bin/git
         if [ "$?" == "1" ]; then
-        	echo "Please install subversion from cygwin" && exit 1
+        	echo "Please install git from cygwin" && exit 1
 	fi
 
 	echo "Installing apt-cyg"
-	svn --force export http://apt-cyg.googlecode.com/svn/trunk/ /bin/
+	tmp_dir=$(mktmp -d)
+	git clone https://github.com/grlee/ansible-init $tmp_dir
+	cp -f $tmp_dir/apt-cyg /bin
 	chmod +x /bin/apt-cyg
+	rm -rf $tmp_dir
 
 	echo "Installing cygwin packages for ansible dependencies"
 	apt-cyg install python gcc-core wget openssh
-
-	echo "Test paramiko"
-	python -c "import paramiko"
-	if [ "$?" == "1" ]; then
-		echo "Look at this page for help to set up 
-python-paramiko http://atbrox.com/2009/09/21/how-to-get-pipvirtualenvfabric-working-on-cygwin/"
-	fi
 
 	echo "Installing setuptools"
 	wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -O - | python
