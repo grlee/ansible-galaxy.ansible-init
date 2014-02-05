@@ -2,6 +2,7 @@
 - name: Test ansible is installed
   shell: ansible --version
   register: ansible_is_installed
+  ignore_errors: yes
 
 - name: Run install script as sudo
   script: setup.sh
