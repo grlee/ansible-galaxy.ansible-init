@@ -21,7 +21,7 @@ if [ "$os_type" == "Cygwin" ]; then
 	rm -rf $tmp_dir
 
 	echo "Installing cygwin packages for ansible dependencies"
-	apt-cyg install python gcc-core wget openssh
+	apt-cyg install python gcc-core wget openssh 
 	if [ "$?" == "1" ]; then
 		echo "Check that mirror site is correct."
 		echo "Use apt-cyg -m <url> show to set a new mirror"
