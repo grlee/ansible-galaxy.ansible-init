@@ -44,14 +44,14 @@ elif [ "$os_type" == "GNU/Linux" ]; then
 		echo "Unknown Linux distro: $(cat /etc/issue)" && exit 1
 	fi
 elif [ "$(uname)" == "Darwin" ]; then
-	echo -n "Installing home brew... "
-	ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)" &> /dev/null && echo "OK" || {echo "FAILED"; exit 1 }
+#	echo -n "Installing home brew... "
+#	ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)" &> /dev/null && echo "OK" || {echo "FAILED"; exit 1 }
 
-	echo -n "Test if home brew is installed... "
-	brew --version &> /dev/null && echo "OK"
-    if [ "$?" == "1"]; then
-		echo "FAILED" && exit 1
-	fi
+#	echo -n "Test if home brew is installed... "
+#	brew --version &> /dev/null && echo "OK"
+#    if [ "$?" == "1"]; then
+#		echo "FAILED" && exit 1
+#	fi
 
 	echo "Installing pip"
 	sudo easy_install pip || exit 1
