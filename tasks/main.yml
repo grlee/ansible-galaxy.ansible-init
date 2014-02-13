@@ -13,3 +13,6 @@
 - name: Run install script without sudo
   script: setup.sh
   when: ansible_is_installed|failed and ansible_init_used_sudo|skipped
+
+- name: Test ansible is installed
+  shell: ansible --version
