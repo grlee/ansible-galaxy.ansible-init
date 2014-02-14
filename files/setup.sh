@@ -2,7 +2,7 @@
 
 function check_linux_distro() {
 	distro=$1; shift
-	grep Ubuntu /etc/issue &> /dev/null; echo $?
+	grep $distro /etc/issue &> /dev/null; echo $?
 }
 
 os_type="$(uname -o)"
@@ -40,6 +40,10 @@ elif [ "$os_type" == "GNU/Linux" ]; then
 		echo "Found Ubuntu distro"
 		echo "Installing pip"
 		sudo apt-get install python-pip -y || exit 1
+	elif [ "$(check_linux_distro CentOS)" == "0" ]; then
+		echo "Found CentOS distro"
+		sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+		sudo yum install ansible -y || exit 1
 	else
 		echo "Unknown Linux distro: $(cat /etc/issue)" && exit 1
 	fi
