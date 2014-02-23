@@ -39,7 +39,7 @@ elif [ "$os_type" == "GNU/Linux" ]; then
 	if [ "$(check_linux_distro Ubuntu)" == "0" ]; then
 		echo "Found Ubuntu distro"
 		echo "Installing pip"
-		sudo apt-get install python-pip -y || exit 1
+		sudo apt-get install python-dev python-pip -y || exit 1
 	elif [ "$(check_linux_distro CentOS)" == "0" ]; then
 		echo "Found CentOS distro"
 		sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
