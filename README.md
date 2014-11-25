@@ -12,3 +12,8 @@ Currently, I've tested this plugin on:
 The shell script that underlies this role can be called directly to install ansible.  Combined with wget, this can be invoked as a one-liner:
 
 wget -O - https://raw.githubusercontent.com/grlee/ansible-galaxy.ansible-init/develop/files/setup.sh | bash
+
+This one-liner will generate batch files for windows to run ansible from the windows command line:
+ls -1 /usr/bin/ansible* | sed 's|/usr/bin/||g' | grep -v \.bat | xargs -ifoo echo echo \'%CYGWIN_HOME%\\bin\\bash -c "foo %*"\' \> /usr/local/bin/foo.bat | bash
+
+
