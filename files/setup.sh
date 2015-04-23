@@ -34,19 +34,20 @@ if [ "$os_type" == "Cygwin" ]; then
 	wget --no-check-certificate https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -O - | python
 
 	echo "Installing pip"
-	easy_install pip
+	easy_install pip || exit 1
 elif [ "$os_type" == "GNU/Linux" ]; then
 	echo "Found Linux distro"
 	if [ "$(check_linux_distro Ubuntu)" == "0" ]; then
 		sudo_cmd=sudo
 		echo "Found Ubuntu distro"
 		echo "Installing pip"
-		sudo apt-get install python-dev python-pip -y || exit 1
+		$sudo_cmd apt-get update --fix-missing -y || exit 1
+		$sudo_cmd apt-get install python-dev python-pip -y || exit 1
 	elif [ "$(check_linux_distro CentOS)" == "0" ]; then
 		sudo_cmd=sudo
 		echo "Found CentOS distro"
-		sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
-		sudo yum install ansible -y || exit 1
+		$sudo_cmd rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+		$sudo_cmd yum install ansible -y || exit 1
 	else
 		echo "Unknown Linux distro: $(cat /etc/issue)" && exit 1
 	fi
