@@ -1,9 +1,9 @@
 #/bin/bash
 
-APT_CGY_URL=https://raw.github.com/transcode-open/apt-cyg/master/apt-cyg
-PYTHON_EZ_SETUP_URL=https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py 
-CENTOS_EPEL_URL=http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
-HOMEBREW_URL=https://raw.github.com/Homebrew/homebrew/go/install
+APT_CGY_URL="https://raw.github.com/transcode-open/apt-cyg/master/apt-cyg"
+PYTHON_EZ_SETUP_URL="https://bootstrap.pypa.io/ez_setup.py"
+CENTOS_EPEL_URL="http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm"
+HOMEBREW_URL="https://raw.github.com/Homebrew/homebrew/go/install"
 
 function check_linux_distro() {
 	distro=$1; shift
@@ -29,7 +29,7 @@ if [ "$os_type" == "Cygwin" ]; then
 	rm -rf $tmp_dir
 
 	echo "Installing cygwin packages for ansible dependencies"
-	apt-cyg install python gcc-core git openssh unzip zip tar 
+	echo /bin/apt-cyg install python gcc-core git openssh unzip zip tar curl | bash
 	if [ "$?" == "1" ]; then
 		echo "Check that mirror site is correct."
 		echo "Use apt-cyg -m <url> show to set a new mirror"
@@ -37,7 +37,7 @@ if [ "$os_type" == "Cygwin" ]; then
 	fi
 
 	echo "Installing setuptools"
-	wget --no-check-certificate -O $PYTHON_EZ_SETUP_URL - | python
+	(cd $tmpdir; curl https://bootstrap.pypa.io/ez_setup.py -o - | python)
 
 	echo "Installing pip"
 	easy_install pip || exit 1
