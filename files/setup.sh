@@ -1,5 +1,10 @@
 #/bin/bash
 
+APT_CGY_URL=https://raw.github.com/transcode-open/apt-cyg/master/apt-cyg
+PYTHON_EZ_SETUP_URL=https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py 
+CENTOS_EPEL_URL=http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+HOMEBREW_URL=https://raw.github.com/Homebrew/homebrew/go/install
+
 function check_linux_distro() {
 	distro=$1; shift
 	grep $distro /etc/issue &> /dev/null; echo $?
@@ -10,20 +15,21 @@ os_type="$(uname -o)"
 test "$os_type" == "" && os_type="$(uname)"
 echo "Found os type $os_type"
 if [ "$os_type" == "Cygwin" ]; then
-	test -f /bin/git
+	test -f /bin/wget
     if [ "$?" == "1" ]; then
-    	echo "Please install git from cygwin" && exit 1
+    	echo "Please install wget from cygwin" && exit 1
 	fi
 
 	echo "Installing apt-cyg"
 	tmp_dir=$(mktemp -d) || exit 1
-	git clone https://github.com/grlee/apt-cyg $tmp_dir || exit 1
+	wget $APT_CGY_URL -O $tmp_dir/apt-cyg || exit 1
+	dos2unix $tmp_dir/apt-cyg || exit 1
 	cp -f $tmp_dir/apt-cyg /bin  || exit 1
 	chmod +x /bin/apt-cyg  || exit 1
 	rm -rf $tmp_dir
 
 	echo "Installing cygwin packages for ansible dependencies"
-	apt-cyg install python gcc-core wget openssh 
+	apt-cyg install python gcc-core git openssh unzip zip tar 
 	if [ "$?" == "1" ]; then
 		echo "Check that mirror site is correct."
 		echo "Use apt-cyg -m <url> show to set a new mirror"
@@ -31,7 +37,7 @@ if [ "$os_type" == "Cygwin" ]; then
 	fi
 
 	echo "Installing setuptools"
-	wget --no-check-certificate https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -O - | python
+	wget --no-check-certificate -O $PYTHON_EZ_SETUP_URL - | python
 
 	echo "Installing pip"
 	easy_install pip || exit 1
@@ -46,14 +52,14 @@ elif [ "$os_type" == "GNU/Linux" ]; then
 	elif [ "$(check_linux_distro CentOS)" == "0" ]; then
 		sudo_cmd=sudo
 		echo "Found CentOS distro"
-		$sudo_cmd rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+		$sudo_cmd rpm -Uvh $CENTOS_EPEL_URL
 		$sudo_cmd yum install ansible -y || exit 1
 	else
 		echo "Unknown Linux distro: $(cat /etc/issue)" && exit 1
 	fi
 elif [ "$os_type" == "Darwin" ]; then
 #	echo -n "Installing home brew... "
-#	ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)" &> /dev/null && echo "OK" || {echo "FAILED"; exit 1 }
+#	ruby -e "$(curl -fsSL $HOMEBREW_URL)" &> /dev/null && echo "OK" || {echo "FAILED"; exit 1 }
 
 #	echo -n "Test if home brew is installed... "
 #	brew --version &> /dev/null && echo "OK"
@@ -76,7 +82,7 @@ if [ "$?" == "1" ]; then
 fi
 
 echo -n "Installing passlib..."
-$sudo_cmd pip install passlib --upgrade && echo "OK"
+$sudo_cmd pip install passlib paramiko PyYAML jinja2 httplib2 docker-py virtualenv pycrypto --upgrade && echo "OK"
 if [ "$?" == "1" ]; then
 	echo "FAILED"; exit 1
 fi
